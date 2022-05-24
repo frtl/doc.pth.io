@@ -5,7 +5,7 @@
   import { preferences } from '../stores/preferences/preferences'
   import SearchResults from '../components/SearchResults.svelte'
   import Spinner from '../components/Spinner.svelte'
-  
+
   let searching = false
   let error = false
 
@@ -16,12 +16,11 @@
   $: mypref = props.filter((x) => x.search)
 
   const handleChange = async (e) => {
-
     //set base query
     let sql = ['select top 15']
 
     //set fields to select
-    let fields = ['c["74"]','c["72"]']
+    let fields = ['c["74"]', 'c["72"]']
 
     //push any additional show fields to our sql
     $preferences.props
@@ -35,7 +34,7 @@
     sql.push('from c where')
 
     //set base conditions
-    let conditions = ['c["74"] <> ""','c["72"] <> ""']
+    let conditions = ['c["74"] <> ""', 'c["72"] <> ""']
 
     //get prefs defined by user
     let userprefs = $preferences.props
@@ -44,7 +43,7 @@
       .map((x) => ({
         id: x.id,
         op: x.match.match('%') ? 'like' : '=',
-        val: x.match.replace('=',x.value),
+        val: x.match.replace('=', x.value),
       }))
 
     //push conditions based on user prefs
@@ -52,19 +51,18 @@
       conditions.push(`c["${x.id}"] ${x.op} @p${x.id}`)
     })
 
-
     //define param values based on user prefs
-    let params = userprefs
-      .map((x) => ({
-        name: `@p${x.id}`,
-        value: upperCase ? x.val.toUpperCase() : x.val
-      }))
+    let params = userprefs.map((x) => ({
+      name: `@p${x.id}`,
+      value: upperCase ? x.val.toUpperCase() : x.val,
+    }))
 
     //add param and conditions for doc type filter
-    let docTypes = $preferences.docs
-      .filter((x) => x.show)
+    let docTypes = $preferences.docs.filter((x) => x.show)
     if (docTypes.length > 0) {
-      conditions.push(`c["72"] in (${docTypes.map(x=>`"${x.id}"`).join(',')})`)
+      conditions.push(
+        `c["72"] in (${docTypes.map((x) => `"${x.id}"`).join(',')})`,
+      )
       // params.push({ name: '@p72', value: docTypes.map(x=>`"${x.id}"`).join(',') })
     }
 
@@ -74,7 +72,7 @@
     //create our query object to pass to cosmos
     let query = {
       query: sql.join(' '),
-      parameters: params
+      parameters: params,
     }
 
     searching = true
@@ -86,21 +84,21 @@
         console.error(err)
       })
   }
-
-
 </script>
 
 {#each mypref as p}
   <p>
-    <b>{p.name}</b>
-    <code>{matchTypes.find((x) => x.value === p.match).text}</code>
+    <label for={p.id}>
+      <b>{p.name}</b>
+      <code>{matchTypes.find((x) => x.value === p.match).text}</code>
+    </label>
+    <br />
+    <input
+      id={p.id}
+      placeholder="Type a value to search and hit enter."
+      on:change={handleChange}
+      bind:value={p.value} />
   </p>
-  <input
-    id={p.id}
-    placeholder="Type a value to search and hit enter."
-    on:change={handleChange}
-    bind:value={p.value} />
-  <br />
 {/each}
 
 {#if mypref.length === 0}
