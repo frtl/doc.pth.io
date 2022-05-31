@@ -6,6 +6,8 @@ export const searchResults = writable(null);
 
 export const getSearchResults = async (qry) => {
   
+  searchResults.set(null)
+
   //get cosmos settings and set query
   const secrets = get(data)
   const endpoint = secrets.cosmosURI
