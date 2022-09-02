@@ -1,18 +1,12 @@
 <script>
-  window['dbg'] = window.location.href.includes('?debug')
-  window['dbg'] && console.log('\n---debug messaging enabled---\n\n')
   import Content from './Content.svelte'
   import Spinner from './components/Spinner.svelte'
-  import { getAuth, accessToken } from './stores/auth/auth'
-  import { getData, data } from './stores/graph/data'
+  import { InteractiveBrowserCredential as ibc } from '@azure/identity'
+  import { login } from './stores/config/config'
 </script>
 
-{#await getAuth()}
+{#await new ibc(login).getToken('')}
   <Spinner message={'Logging in...'} />
 {:then _}
-  {#await getData()}
-    <Spinner message={'Getting secrets...'} />
-  {:then _}
-    <Content />
-  {/await}
+  <Content />
 {/await}

@@ -19,10 +19,29 @@
 
 <details>
   <summary>Document Types</summary>
-  <p>Choose document types you'd like to return in your queries.</p>
-  {#each $preferences.docs as d}
-    <input type="checkbox" bind:checked={d.show} />{d.name}<br />
-  {/each}
+  <p>Choose document types you'd like to include in your queries.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Document Type</th>
+        <th>Include</th>
+      </tr>
+    </thead>
+    <tbody>
+      {#each $preferences.docs as d}
+        <tr>
+          <td>{d.id}</td>
+          <td>
+            <input bind:value={d.name} style="width:20rem;" />
+          </td>
+          <td style="text-align:center;">
+            <input type="checkbox" bind:checked={d.show} />
+          </td>
+        </tr>
+      {/each}
+    </tbody>
+  </table>
 </details>
 
 <details>
@@ -43,7 +62,9 @@
       {#each $preferences.props as r}
         <tr>
           <td>{r.id}</td>
-          <td>{r.name}</td>
+          <td>
+            <input bind:value={r.name} style="width:20rem;" />
+          </td>
           <td style="text-align:center;">
             <input type="checkbox" bind:checked={r.search} />
           </td>
