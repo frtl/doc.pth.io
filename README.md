@@ -18,6 +18,23 @@ currently this is setup for each user to have access provisioned in azure storag
 
 cosmosdb requires some setup. see [here](https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-setup-rbac) for details. we are using the built in read only role.
 
+```ps1
+az login
+az ad user show --id user@domain.com
+# copy 'id' property from this result
+$resourceGroupName = 'rg for the cosmosdb'
+$accountName = 'name of cosmosdb'
+$readOnlyRoleDefinitionId = '00000000-0000-0000-0000-000000000001'
+$id = 'copy from result above'
+az cosmosdb sql role assignment create `
+  --account-name $accountName `
+  --resource-group $resourceGroupName `
+  --scope "/" `
+  --principal-id $id `
+  --role-definition-id $readOnlyRoleDefinitionId
+}
+```
+
 ## storage
 
 on storage account go into the container with the blobs and grant 'Storage Blob Data Reader' role to the user. note this permission is in IAM on the container, not on the storage account.
