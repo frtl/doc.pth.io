@@ -1,10 +1,11 @@
 <script>
   import { downloadBlob } from './DownloadButton.js'
   export let searchResult
-  const f = searchResult['74']
-  const blobName = [f.substring(0, 3), f.substring(3, 6), f].join('/')
-  let buttonText = 'Download'
-  let buttonDisabled = false
+  let f, blobName, buttonText, buttonDisabled
+  $: f = searchResult['74']
+  $: blobName = [f.substring(0, 3), f.substring(3, 6), f].join('/')
+  $: buttonText = 'Download'
+  $: buttonDisabled = false
 
   const hc = async () => {
     buttonDisabled = true
