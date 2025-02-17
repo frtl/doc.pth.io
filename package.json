@@ -13,7 +13,7 @@
     "@azure/storage-blob": "12.13.0",
     "@snowpack/plugin-svelte": "^3.7.0",
     "snowpack": "^3.8.8",
-    "svelte": "^3.59.2",
+    "svelte": "^5.20.1",
     "svelte-spa-router": "^4.0.1"
   }
 }
