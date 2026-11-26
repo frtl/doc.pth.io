@@ -16,9 +16,13 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: true
+      # plain git, no checkout action. the repo is public and has no submodules, so no token.
+      - name: Clone
+        run: |
+          git init -q .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}"
+          git fetch -q --depth 1 origin "$GITHUB_SHA"
+          git checkout -q FETCH_HEAD
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@1a947af9992250f3bc2e68ad0754c0b0c11566c9 # v1
